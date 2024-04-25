@@ -10,20 +10,33 @@ jobs:
     steps:
       - checkout
 
-      - setup_remote_docker:
-          docker_layer_caching: false
+      - run:
+          name: Build and test Docker image
+          command: |
+            docker build -t YOUR_USERNAME/climbing_stairs:latest --target builder .
+            docker build -t YOUR_USERNAME/climbing_stairs:deploy --target deploy .
+
+  deploy:
+    docker:
+      - image: docker:26.1.0  # Use a lightweight image for deployment tasks
+
+    steps:
+      - checkout
 
       - run:
-          name: Build Docker image
+          name: Login to Docker Hub
           command: |
-            docker build -t climbing-stairs .
+            echo "$DOCKER_HUB_PASSWORD" | docker login -u hollowsam -p stdin  # Securely use environment variable
 
       - run:
-          name: Run Docker container
+          name: Push deployment image
           command: |
-            docker run climbing-stairs
+            docker push hollowsam/climbing_stairs:latest
 
 workflows:
-  build_test:
-   jobs:
-     - build
+  build_test_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build  # Run deployment only after successful build
