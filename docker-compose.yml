@@ -2,11 +2,13 @@ version: '3.9'
 
 services:
   climbing-stairs:
+    # image: <repository_URL>/<image_name>:<tag>
     build:
       context: .
       dockerfile: Dockerfile
     networks:
       - backend
+# Uncomment this to map the port inside container to your machine's port.  
     # ports:
     #   - "8080:8080"
 
