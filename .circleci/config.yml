@@ -13,8 +13,8 @@ jobs:
       - run:
           name: Build and test Docker image
           command: |
-            docker build -t YOUR_USERNAME/climbing_stairs:latest --target builder .
-            docker build -t YOUR_USERNAME/climbing_stairs:deploy --target deploy .
+            docker build -t hollowsam/climbing_stairs:latest --target builder .
+            docker build -t hollowsam/climbing_stairs:deploy --target deploy .
 
   deploy:
     docker:
