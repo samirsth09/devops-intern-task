@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: docker:26.1.0
+      - image: ubunut-22.04
 
     working_directory: /app
 
