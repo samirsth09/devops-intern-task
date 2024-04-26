@@ -13,8 +13,8 @@ jobs:
       - run:
           name: Build and test Docker image
           command: |
-            docker build -t hollowsam/climbing_stairs:latest --target builder .
-            docker build -t hollowsam/climbing_stairs:deploy --target deploy .
+            docker build -t climbing_stairs:latest --target builder .
+            docker build -t climbing_stairs:deploy --target deploy .
 
   deploy:
     docker:
@@ -27,6 +27,7 @@ jobs:
           name: Login to Docker Hub
           command: |
             echo "$DOCKER_HUB_PASSWORD" | docker login -u hollowsam -p stdin  # Securely use environment variable
+            docker tag climbing_stairs:deploy hollowsam/climbing_stairs:latest 
 
       - run:
           name: Push deployment image
