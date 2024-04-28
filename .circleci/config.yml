@@ -10,7 +10,6 @@ jobs:
     steps:
       - checkout
 
-      # Install dependencies (new step)
       - run:
           name: Install Dependencies
           command: |
@@ -40,6 +39,12 @@ jobs:
           name: Push deployment image
           command: |
             docker push hollowsam/climbing_stairs:latest
+
+      - run:
+          name: Debug Docker
+          command: |
+            docker version
+            docker info
 
 workflows:
   build_test_deploy:
