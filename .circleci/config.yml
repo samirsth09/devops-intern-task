@@ -10,6 +10,12 @@ jobs:
     steps:
       - checkout
 
+      # Install Docker Engine (new step)
+      - run:
+          name: Install Docker Engine
+          command: |
+            curl -fsSL https://get.docker.com/ | sh
+
       - run:
           name: Build and test Docker image
           command: |
@@ -18,8 +24,7 @@ jobs:
 
   deploy:
     docker:
-      - image: docker:26.1.0  # Use a lightweight image for deployment tasks
-
+      - image: docker:26.1.0  
     steps:
       - checkout
 
@@ -40,4 +45,4 @@ workflows:
       - build
       - deploy:
           requires:
-            - build  # Run deployment only after successful build
+            - build 
