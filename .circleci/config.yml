@@ -19,8 +19,10 @@ jobs:
             if [[ -n "$DOCKER_USERNAME" ]]; then
               echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
               docker tag climbing_stairs:latest "$DOCKER_USERNAME/climbing_stairs:latest"
+              docker push "$DOCKER_USERNAME/climbing_stairs:latest"
+            else
+              docker push climbing_stairs:latest
             fi
-            docker push climbing_stairs:latest
 
 workflows:
   build_test_deploy:
