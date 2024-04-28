@@ -3,53 +3,26 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: ubuntu:22.04
-
-    working_directory: /app
+      - image: docker:stable
 
     steps:
       - checkout
-
+      - setup_remote_docker:
+          version: stable
       - run:
-          name: Install Dependencies
-          command: |
-            apt-get update  # Update package lists (Ubuntu/Debian)
-            apt-get install -y curl  # Install curl
-            apt-get install -y docker.io  # Install Docker Engine
-
-      - run:
-          name: Build and test Docker image
+          name: Build Docker Image
           command: |
             docker build -t climbing_stairs:latest .
-
-  deploy:
-    docker:
-      - image: docker:26.1.0  # Use a lightweight image for deployment tasks
-
-    steps:
-      - checkout
-
       - run:
-          name: Login to Docker Hub
+          name: Push Docker Image to Docker Hub (Optional Username)
           command: |
-            echo "$DOCKER_HUB_PASSWORD" | docker login -u hollowsam --password-stdin  # Securely use environment variable
-            docker tag climbing_stairs:latest hollowsam/climbing_stairs:latest 
-
-      - run:
-          name: Push deployment image
-          command: |
-            docker push hollowsam/climbing_stairs:latest
-
-      - run:
-          name: Debug Docker
-          command: |
-            docker version
-            docker info
+            if [[ -n "$DOCKER_USERNAME" ]]; then
+              echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+              docker tag climbing_stairs:latest "$DOCKER_USERNAME/climbing_stairs:latest"
+            fi
+            docker push climbing_stairs:latest
 
 workflows:
   build_test_deploy:
     jobs:
       - build
-      - deploy:
-          requires:
-            - build  # Run deployment only after successful build
