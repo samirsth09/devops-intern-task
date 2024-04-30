@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - main
-permissions: write-all
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,18 +16,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: AI Code Reviewer
+      - name: AI Code Reviewer (secure)
         uses: samirsth09/devops-intern-task@main
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.SAM_GPT }}
-          OPENAI_API_MODEL: "gpt-3.5"
-          exclude: "**/*.json, **/*.md" # Optional: exclude patterns separated by commas
+          args: |
+            --github-token ${{ secrets.GITHUB_TOKEN }}
+            --openai-api-key ${{ secrets.SAM_GPT }}
+            --openai-api-model gpt-4  # Removed quotes for model name
+            --exclude "**/*.json, **/*.md"
 
       - name: Build Docker image
         run: docker build -t climbing-stairs .
 
       - name: Run Docker container
         run: docker run climbing-stairs
-
-
